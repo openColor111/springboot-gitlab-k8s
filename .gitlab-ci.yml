@@ -41,6 +41,7 @@ docker_build:
   script:
     - echo "publish Project"
     - FILE=`ls  target/|grep .jar|head -1` 
+    - who
     - |
       echo "COPY target/$FILE /" >>  Dockerfile ;
       echo  CMD '["java","-jar","'/$FILE'" ]'>>  Dockerfile ;
