@@ -28,7 +28,7 @@ spec:
     spec:
       containers:
       - name: web-app
-        image: IMG
+        image: 192.168.153.131:8088/devops03/sprintboot:202409101652
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8080
