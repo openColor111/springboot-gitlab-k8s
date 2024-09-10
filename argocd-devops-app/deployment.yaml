@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-app
+spec:
+  selector:
+    app: web-app
+  ports:
+  - protocol: TCP 
+    port: 8080
+    targetPort: 8080
+  type: ClusterIP
+---
+# Source: javachart/templates/demo.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-app
+spec:
+  selector:     #筛选pod标签
+    matchLabels:
+      app: web-app
+  replicas: 4   #副本数
+  template:     #定义pod
+    metadata:
+      labels:
+        app: web-app
+    spec:
+      containers:
+      - name: web-app
+        image: IMG
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+
+      imagePullSecrets:
+      - name: default-secret
+

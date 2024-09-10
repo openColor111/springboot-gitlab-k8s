@@ -1,0 +1,68 @@
+variables:
+#设置了全局作业关闭作业下载
+  GIT_CHECKOUT: "false"
+  DOCKER_REGISTRY: "192.168.153.131:8088"
+  DOCKER_USER: "admin"
+  DOCKER_PASS: "Harbor12345"
+
+
+#初始化下载代码设置
+pipelineInit:
+  tags:
+  - build
+  stage: .pre 
+  variables:
+    GIT_CHECKOUT: "true"
+  script:
+    - echo "Checkout code"
+
+    
+stages:
+  - build 
+  - test 
+  - dbuild 
+  - pub
+  - update
+project_build:
+  stage: build
+  script:
+    - echo "build Project"
+    - mvn clean package -DskipTests -s settings.xml
+
+project_test:
+  stage: test
+  script:
+    - echo "test Project"
+    - mvn test -s settings.xml
+
+docker_build:
+  stage: dbuild 
+  script:
+    - echo "publish Project"
+    - FILE=`ls  target/|grep .jar|head -1` 
+    - |
+      echo "COPY target/$FILE /" >>  Dockerfile ;
+      echo  CMD '["java","-jar","'/$FILE'" ]'>>  Dockerfile ;
+      VERSION=`date +%Y%m%d%H%M`;
+      docker build -t $DOCKER_REGISTRY/$CI_PROJECT_PATH:$VERSION . ; 
+    - echo "$DOCKER_REGISTRY/$CI_PROJECT_PATH:$VERSION" > VAR_FILE
+  artifacts:
+    paths:
+      - VAR_FILE
+  
+docker_push:
+  stage: pub
+  dependencies: 
+    - docker_build
+  script:
+    - echo "push Project"
+    - docker push `cat VAR_FILE`
+
+git_update:
+  stage: update
+  dependencies: 
+    - docker_build
+  script:
+    - IMG=`cat VAR_FILE`; sed -i "s|IMG|$IMG|g" argocd-devops-app/deployment.yaml
+    - git add .; git commit -m "update img"; git push 
+    
