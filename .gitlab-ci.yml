@@ -23,6 +23,7 @@ stages:
   - dbuild 
   - pub
   - update
+  - update-deploy
 project_build:
   stage: build
   script:
@@ -64,5 +65,5 @@ git_update:
     - docker_build
   script:
     - IMG=`cat VAR_FILE`; sed -i "s|IMG|$IMG|g" argocd-devops-app/deployment.yaml
-    - git add .; git commit -m "update img"; git push 
-    
+    - python3  gitlab-test.py
+
