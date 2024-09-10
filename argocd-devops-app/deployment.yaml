@@ -34,5 +34,5 @@ spec:
         - containerPort: 8080
 
       imagePullSecrets:
-      - name: default-secret
+      - name: my-registry-secret
 
