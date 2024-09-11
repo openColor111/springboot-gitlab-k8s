@@ -72,5 +72,5 @@ git_update:
     - IMG=`cat VAR_FILE`; sed -i "s|IMG|$IMG|g" argocd-devops-app/deployment.yaml
     - python3  gitlab-test.py
   except:
-    - paths:
-        - "argocd-devops-app/deployment.yaml"
+    - "README.md"
+    - "argocd-devops-app/deployment.yaml"
