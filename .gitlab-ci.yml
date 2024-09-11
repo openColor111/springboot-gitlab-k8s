@@ -72,8 +72,3 @@ git_update:
   script:
     - IMG=`cat VAR_FILE`; sed -i "s|IMG|$IMG|g" argocd-devops-app/deployment.yaml
     - python3  gitlab-test.py
-    
-  except:
-    changes:
-      - "*.md"  # 忽略所有 Markdown 文件的变更
-      - "argocd-devops-app/**"  # 忽略 docs 目录下的所有文件变更
