@@ -66,9 +66,11 @@ docker_push:
 
 git_update:
   stage: update
-
   dependencies: 
     - docker_build
   script:
     - IMG=`cat VAR_FILE`; sed -i "s|IMG|$IMG|g" argocd-devops-app/deployment.yaml
     - python3  gitlab-test.py
+  except:
+    - paths:
+        - "argocd-devops-app/deployment.yaml"
