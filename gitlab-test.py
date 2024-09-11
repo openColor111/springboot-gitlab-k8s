@@ -36,7 +36,7 @@ encoded_content = base64.b64encode(new_content.encode('utf-8')).decode('utf-8')
 # 提交文件到GitLab
 data = {
     'branch': BRANCH_NAME,
-    'commit_message': '更新文件内容',
+    'commit_message': '更新文件内容  [ci skip]',
     'actions': [
         {
             'action': 'update',  # 如果文件不存在，可以用'create'来创建新文件
